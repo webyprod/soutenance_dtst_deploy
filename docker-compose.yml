@@ -8,8 +8,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: jefferson        # depuis secret
       MYSQL_DATABASE: userdb               # depuis configMap
-      MYSQL_USER: root                     # depuis secret
-      MYSQL_PASSWORD: jefferson            # depuis secret
     volumes:
       - mysql_data:/var/lib/mysql
     ports:
