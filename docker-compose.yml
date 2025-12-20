@@ -1,0 +1,58 @@
+version: "3.9"
+
+services:
+
+  mysql:
+    image: mysql:8
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: jefferson        # depuis secret
+      MYSQL_DATABASE: userdb               # depuis configMap
+      MYSQL_USER: root                     # depuis secret
+      MYSQL_PASSWORD: jefferson            # depuis secret
+    volumes:
+      - mysql_data:/var/lib/mysql
+    ports:
+      - "3306:3306"                        # équivalent Service clusterIP:None
+    networks:
+      - soutenance-net
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      retries: 10
+
+  backend:
+    image: awsfox92/soutenance-project-demo:latest
+    container_name: backend
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/userdb?serverTimezone=Europe/Paris
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: jefferson
+    ports:
+      - "8080:8080"                        # équivalent Service ClusterIP exposé
+    networks:
+      - soutenance-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/users"]
+      interval: 10s
+      retries: 5
+
+  frontend:
+    image: awsfox92/soutenance-ui:latest
+    container_name: frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "30080:80"                         # équivalent NodePort 30080 → 80
+    networks:
+      - soutenance-net
+
+volumes:
+  mysql_data:
+
+networks:
+  soutenance-net:
