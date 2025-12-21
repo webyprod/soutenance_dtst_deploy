@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-front
+spec:
+  selector:
+    app: users-front
+  ports:
+    - port: 80 # Port interne du Service
+      targetPort: 80 # nginx
+      nodePort: 30080
+  type: NodePort
