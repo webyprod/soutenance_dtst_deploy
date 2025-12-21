@@ -8,5 +8,4 @@ spec:
   ports:
     - port: 80 # Port interne du Service
       targetPort: 80 # nginx
-      nodePort: 30080
-  type: NodePort
+  type: LoadBalancer
