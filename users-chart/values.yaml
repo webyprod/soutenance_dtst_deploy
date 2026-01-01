@@ -1,0 +1,16 @@
+usersBack:
+  image: awsfox92/users-backend:project
+  servicePort: 8080
+  containerPort: 8080
+
+usersFront:
+  image: awsfox92/users-front:project
+  servicePort: 80
+  containerPort: 80
+  nodePort: 30080
+
+mysql:
+  image: mysql:8
+  rootPassword: jefferson
+  database: userdb
+  username: root

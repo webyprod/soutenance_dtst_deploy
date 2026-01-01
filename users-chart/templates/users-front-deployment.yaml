@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: users-front
+  template:
+    metadata:
+      labels:
+        app: users-front
+    spec:
+      containers:
+        - name: users-front
+          image: {{ .Values.usersFront.image }}
+          ports:
+            - containerPort: {{ .Values.usersFront.containerPort }}
