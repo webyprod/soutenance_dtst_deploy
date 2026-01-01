@@ -1,10 +1,10 @@
 usersBack:
-  image: awsfox92/users-backend:project
+  image: awsfox92/soutenance-project-demo:latest
   servicePort: 8080
   containerPort: 8080
 
 usersFront:
-  image: awsfox92/users-front:project
+  image: awsfox92/soutenance-ui:latest
   servicePort: 80
   containerPort: 80
   nodePort: 30080
