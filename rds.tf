@@ -13,7 +13,24 @@ resource "aws_db_instance" "mysql" {
   password                = "admin123"
   db_name                 = "userdb"
   db_subnet_group_name    = aws_db_subnet_group.db_subnets.name
-  vpc_security_group_ids  = [aws_security_group.main_sg.id]
+  vpc_security_group_ids  = [aws_security_group.rds_sg.id]
   publicly_accessible     = false
   skip_final_snapshot     = true
+}
+
+output "rds_endpoint" {
+  value = aws_db_instance.mysql.address
+}
+
+output "rds_port" {
+  value = aws_db_instance.mysql.port
+}
+
+output "rds_username" {
+  value = aws_db_instance.mysql.username
+}
+
+output "rds_password" {
+  value     = aws_db_instance.mysql.password
+  sensitive = true
 }

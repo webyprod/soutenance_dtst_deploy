@@ -13,15 +13,6 @@ resource "aws_iam_role" "jenkins_role" {
   })
 }
 
-/*resource "aws_iam_role_policy_attachment" "jenkins_eks" {
-  role       = aws_iam_role.jenkins_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-}
-
-resource "aws_iam_role_policy_attachment" "jenkins_ecr" {
-  role       = aws_iam_role.jenkins_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-}*/
 
 resource "aws_iam_role_policy_attachment" "jenkins_admin" {
   role       = aws_iam_role.jenkins_role.name
