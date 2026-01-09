@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: users-deployment
+  labels:
+    app: users
 spec:
   replicas: 1
   selector:
@@ -13,20 +15,25 @@ spec:
         app: users
     spec:
       containers:
-        - name: users-container
+        - name: users
           image: {{ .Values.usersBack.image }}
           ports:
             - containerPort: {{ .Values.usersBack.containerPort }}
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://mysql-service:3306/userdb?serverTimezone=Europe/Paris
+              valueFrom:
+                secretKeyRef:
+                  name: backend-db-secret
+                  key: SPRING_DATASOURCE_URL
+
             - name: SPRING_DATASOURCE_USERNAME
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
-                  key: username
+                  name: backend-db-secret
+                  key: SPRING_DATASOURCE_USERNAME
+
             - name: SPRING_DATASOURCE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: mysql-secret
-                  key: password
+                  name: backend-db-secret
+                  key: SPRING_DATASOURCE_PASSWORD
