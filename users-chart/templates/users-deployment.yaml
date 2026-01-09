@@ -2,8 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: users-deployment
-  labels:
-    app: users
+  namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
   selector:

@@ -9,8 +9,4 @@ usersFront:
   containerPort: 80
   nodePort: 30080
 
-mysql:
-  image: mysql:8
-  rootPassword: jefferson
-  database: userdb
-  username: root
+namespace: preprod
