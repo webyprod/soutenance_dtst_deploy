@@ -3,3 +3,9 @@ resource "kubernetes_namespace" "prod" {
     name = "prod"
   }
 }
+
+resource "kubernetes_namespace" "preprod" {
+  metadata {
+    name = "preprod"
+  }
+}

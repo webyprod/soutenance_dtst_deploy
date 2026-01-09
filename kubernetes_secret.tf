@@ -15,3 +15,21 @@ resource "kubernetes_secret" "backend_db" {
     SPRING_DATASOURCE_PASSWORD = aws_db_instance.mysql.password
   }
 }
+
+resource "kubernetes_secret" "backend_db_preprod" {
+  depends_on = [
+    kubernetes_namespace.preprod,
+    aws_eks_node_group.nodegroup
+  ]
+
+  metadata {
+    name      = "backend-db-secret"
+    namespace = "preprod"
+  }
+
+  data = {
+    SPRING_DATASOURCE_URL      = "jdbc:mysql://${aws_db_instance.mysql.address}:${aws_db_instance.mysql.port}/userdb?serverTimezone=Europe/Paris"
+    SPRING_DATASOURCE_USERNAME = aws_db_instance.mysql.username
+    SPRING_DATASOURCE_PASSWORD = aws_db_instance.mysql.password
+  }
+}
