@@ -9,5 +9,4 @@ spec:
   ports:
     - port: {{ .Values.usersFront.servicePort }}        # Port interne du Service
       targetPort: {{ .Values.usersFront.containerPort }}  # Port du container (Nginx)
-      nodePort: {{ .Values.usersFront.nodePort }} # Port exposé sur les nœuds (entre 30000-32767)
-  type: NodePort
+  type: LoadBalancer
