@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: users
-          image: {{ .Values.usersBack.image }}
+          image: {{ printf "%s:%s" .Values.usersBack.image .Values.usersBack.tag }}
           ports:
             - containerPort: {{ .Values.usersBack.containerPort }}
           env:
