@@ -9,3 +9,9 @@ resource "kubernetes_namespace" "preprod" {
     name = "preprod"
   }
 }
+
+resource "kubernetes_namespace" "argocd" {
+  metadata {
+    name = "argocd"
+  }
+}
