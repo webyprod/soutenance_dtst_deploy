@@ -1,119 +1,18 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
 metadata:
-  creationTimestamp: "2026-01-11T19:34:46Z"
-  generation: 30
-  managedFields:
-  - apiVersion: argoproj.io/v1alpha1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:spec:
-        .: {}
-        f:destination:
-          .: {}
-          f:namespace: {}
-          f:server: {}
-        f:project: {}
-        f:source:
-          .: {}
-          f:path: {}
-          f:repoURL: {}
-          f:targetRevision: {}
-      f:status:
-        .: {}
-        f:health: {}
-        f:summary: {}
-        f:sync:
-          .: {}
-          f:comparedTo:
-            .: {}
-            f:destination: {}
-            f:source: {}
-    manager: argocd-server
-    operation: Update
-    time: "2026-01-11T19:34:46Z"
-  - apiVersion: argoproj.io/v1alpha1
-    fieldsType: FieldsV1
-    fieldsV1:
-      f:status:
-        f:controllerNamespace: {}
-        f:health:
-          f:status: {}
-        f:reconciledAt: {}
-        f:resources: {}
-        f:sourceType: {}
-        f:sync:
-          f:comparedTo:
-            f:destination:
-              f:namespace: {}
-              f:server: {}
-            f:source:
-              f:path: {}
-              f:repoURL: {}
-              f:targetRevision: {}
-          f:revision: {}
-          f:status: {}
-    manager: argocd-application-controller
-    operation: Update
-    time: "2026-01-11T20:59:23Z"
   name: soutenance-prod
   namespace: argocd
-  resourceVersion: "52476"
-  uid: d66a6725-56de-4f3e-9940-d464e6f75d5e
 spec:
-  destination:
-    namespace: prod
-    server: https://kubernetes.default.svc
   project: default
   source:
-    path: users-chart
     repoURL: https://github.com/webyprod/soutenance_dtst_deploy.git
     targetRevision: prod
-status:
-  controllerNamespace: argocd
-  health:
-    status: Missing
-  reconciledAt: "2026-01-11T20:59:22Z"
-  resources:
-  - health:
-      status: Missing
-    kind: Service
-    name: backend
+    path: users-chart
+  destination:
+    server: https://kubernetes.default.svc
     namespace: prod
-    status: OutOfSync
-    version: v1
-  - health:
-      status: Missing
-    kind: Service
-    name: users-front
-    namespace: prod
-    status: OutOfSync
-    version: v1
-  - group: apps
-    health:
-      status: Missing
-    kind: Deployment
-    name: users-deployment
-    namespace: prod
-    status: OutOfSync
-    version: v1
-  - group: apps
-    health:
-      status: Missing
-    kind: Deployment
-    name: users-front
-    namespace: prod
-    status: OutOfSync
-    version: v1
-  sourceHydrator: {}
-  sourceType: Helm
-  summary: {}
-  sync:
-    comparedTo:
-      destination:
-        namespace: prod
-        server: https://kubernetes.default.svc
-      source:
-        path: users-chart
-        repoURL: https://github.com/webyprod/soutenance_dtst_deploy.git
-        targetRevision: prod
-    revision: f325288371f2fa6ebdf0d19f7fb629b13c683aaf
-    status: OutOfSync
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -11,3 +11,7 @@ usersFront:
   containerPort: 80
 
 namespace: prod
+
+ingress:
+  enabled: true
+  certificateArn: arn:aws:acm:REGION:ACCOUNT:certificate/XXXX

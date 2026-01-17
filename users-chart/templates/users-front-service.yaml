@@ -9,4 +9,4 @@ spec:
   ports:
     - port: {{ .Values.usersFront.servicePort }}        # Port interne du Service
       targetPort: {{ .Values.usersFront.containerPort }}  # Port du container (Nginx)
-  type: LoadBalancer
+  type: ClusterIP
