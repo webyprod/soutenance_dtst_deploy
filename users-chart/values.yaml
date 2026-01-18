@@ -1,6 +1,6 @@
 usersBack:
   image: awsfox92/soutenance-project-demo
-  tag: "0.0.9"
+  tag: "0.0.8"
   servicePort: 8080
   containerPort: 8080
 
