@@ -3,6 +3,10 @@ kind: Service
 metadata:
   name: users-front
   namespace: {{ .Values.namespace }}
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: http
+    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: /
 spec:
   selector:
     app: users-front
