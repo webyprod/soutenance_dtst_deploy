@@ -14,4 +14,4 @@ namespace: prod
 
 ingress:
   enabled: true
-  certificateArn: arn:aws:acm:us-east-1:828776881371:certificate/3bd0373e-3f4a-43b0-91bc-47d251e0a3a6
+  certificateArn: arn:aws:acm:us-east-1:828776881371:certificate/3936bbc7-2aaf-4d36-a14d-2ae2e6935348
