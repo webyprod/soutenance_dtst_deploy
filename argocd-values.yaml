@@ -1,6 +1,9 @@
 server:
   service:
     type: LoadBalancer
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"          # ou "alb" si tu préfères
+      service.beta.kubernetes.io/aws-load-balancer-internal: "false"    # public LB
 
   ingress:
     enabled: false

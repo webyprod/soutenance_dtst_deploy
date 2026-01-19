@@ -10,4 +10,14 @@ resource "helm_release" "argocd" {
   values = [
     file("${path.module}/argocd-values.yaml")
   ]
+
+  timeout = 900        # 15 minutes
+  wait    = true       # attendre les pods
+  atomic  = true       # rollback si vrai échec
+
+  depends_on = [
+  aws_eks_node_group.nodegroup,
+  kubernetes_namespace.argocd,
+  helm_release.aws_lb_controller
+]
 }
