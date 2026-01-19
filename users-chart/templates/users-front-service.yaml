@@ -3,14 +3,15 @@ kind: Service
 metadata:
   name: users-front
   namespace: {{ .Values.namespace }}
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
-    service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: http
-    service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: /
+  #annotations:
+    #service.beta.kubernetes.io/aws-load-balancer-backend-protocol: http
+    #service.beta.kubernetes.io/aws-load-balancer-healthcheck-protocol: http
+    #service.beta.kubernetes.io/aws-load-balancer-healthcheck-path: /
 spec:
   selector:
     app: users-front
   ports:
     - port: {{ .Values.usersFront.servicePort }}        # Port interne du Service
       targetPort: {{ .Values.usersFront.containerPort }}  # Port du container (Nginx)
-  type: LoadBalancer
+  #type: LoadBalancer
+  type: ClusterIP

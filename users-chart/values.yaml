@@ -11,3 +11,7 @@ usersFront:
   containerPort: 80
 
 namespace: preprod
+
+ingress:
+  enabled: true
+  certificateArn: arn:aws:acm:us-east-1:828776881371:certificate/3936bbc7-2aaf-4d36-a14d-2ae2e6935348
