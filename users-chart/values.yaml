@@ -1,12 +1,12 @@
 usersBack:
   image: awsfox92/soutenance-project-demo
-  tag: "0.0.13"
+  tag: ""
   servicePort: 8080
   containerPort: 8080
 
 usersFront:
   image: awsfox92/soutenance-ui
-  tag: "0.0.14"
+  tag: ""
   servicePort: 80
   containerPort: 80
 
