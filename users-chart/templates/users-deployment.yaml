@@ -42,3 +42,5 @@ spec:
               value: {{ .Values.dd.env | quote }}
             - name: DD_VERSION
               value: {{ .Values.usersBack.tag | quote }}
+            - name: DD_AGENT_HOST
+              value: "datadog-agent"
