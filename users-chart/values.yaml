@@ -14,4 +14,4 @@ namespace: preprod
 
 ingress:
   enabled: true
-  certificateArn: arn:aws:acm:us-east-1:828776881371:certificate/3936bbc7-2aaf-4d36-a14d-2ae2e6935348
+  certificateArn: arn:aws:acm:us-east-1:828776881371:certificate/fa052d8a-f038-41b9-aef0-0ce5fc111fff
