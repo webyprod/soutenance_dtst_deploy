@@ -15,3 +15,6 @@ namespace: prod
 ingress:
   enabled: true
   certificateArn: arn:aws:acm:us-east-1:828776881371:certificate/fa052d8a-f038-41b9-aef0-0ce5fc111fff
+
+dd:
+  env: prod

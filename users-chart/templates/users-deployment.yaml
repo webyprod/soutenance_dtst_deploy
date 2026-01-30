@@ -36,3 +36,9 @@ spec:
                 secretKeyRef:
                   name: backend-db-secret
                   key: SPRING_DATASOURCE_PASSWORD
+            - name: DD_SERVICE
+              value: "users-backend"
+            - name: DD_ENV
+              value: {{ .Values.dd.env | quote }}
+            - name: DD_VERSION
+              value: {{ .Values.usersBack.tag | quote }}
