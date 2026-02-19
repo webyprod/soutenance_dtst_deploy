@@ -12,7 +12,8 @@ resource "aws_security_group" "main_sg" {
       { from = 465, to = 465 },
       { from = 6443, to = 6443 },
       { from = 27017, to = 27017 },
-      { from = 3000, to = 10000 }
+      { from = 3000, to = 10000 },
+      { from = 30080, to = 30080 }
     ]
 
     content {

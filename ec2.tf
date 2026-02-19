@@ -27,8 +27,7 @@ resource "aws_instance" "jenkins" {
   }
 }
 
-resource "aws_instance" "nexus_sonar" {
-  count                       = 2
+resource "aws_instance" "sonar" {
   ami                         = data.aws_ami.ubuntu.id
   instance_type               = "t2.medium"
   key_name                    = "awskey"
@@ -41,6 +40,6 @@ resource "aws_instance" "nexus_sonar" {
   }
 
   tags = {
-    Name = "nexus-sonar-${count.index + 1}"
+    Name = "sonar"
   }
 }
