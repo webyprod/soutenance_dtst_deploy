@@ -1,0 +1,57 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk17'
+        maven 'maven'
+    }
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                deleteDir()
+                git branch: 'release', url: 'https://github.com/webyprod/soutenance_dtst.git'
+                sh 'git log -1 --oneline'
+            }
+        }
+
+        stage('Maven Release') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+                    sh '''
+                    rm -rf target
+                    mvn -X -e -B release:prepare release:perform -Dusername=$GIT_USER -Dpassword=$GIT_TOKEN || true
+                    '''
+                }
+            }
+        }
+
+        stage('Get Released Version') {
+            steps {
+                script {
+                    VERSION = sh(
+                        script: "git describe --tags --abbrev=0",
+                        returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+
+        stage('Build & Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        docker build -t $DOCKER_USER/soutenance-project-demo:${VERSION} .
+                        docker push $DOCKER_USER/soutenance-project-demo:${VERSION}
+                    """
+                }
+            }
+        }
+    }
+    post {
+        success {
+            build job: 'RELEASE-FRONTEND', wait: false
+        }
+    }
+}

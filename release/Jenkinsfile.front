@@ -1,0 +1,74 @@
+pipeline {
+    agent any
+
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout([
+                    $class: 'GitSCM',
+                    branches: [[name: 'develop']],
+                    userRemoteConfigs: [[
+                        url: 'https://github.com/webyprod/soutenance_dtst_ui.git',
+                        credentialsId: 'github-creds'
+                    ]],
+                    doGenerateSubmoduleConfigurations: false,
+                    extensions: [
+                        [$class: 'WipeWorkspace'],
+                        [$class: 'CleanBeforeCheckout'],
+                        [$class: 'PruneStaleBranch']
+                    ]
+                ])
+
+                sh '''
+                    git checkout -B develop origin/develop
+                '''
+            }
+        }
+
+        stage('NPM Version') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+                    sh '''
+                        git tag -d $(git tag) || true
+                        npm version patch -m "Release %s"
+                        git push https://$GIT_USER:$GIT_TOKEN@github.com/webyprod/soutenance_dtst_ui.git develop
+                        git push https://$GIT_USER:$GIT_TOKEN@github.com/webyprod/soutenance_dtst_ui.git --tags
+                    '''
+                }
+            }
+        }
+
+        stage('Get Released Version') {
+            steps {
+                script {
+                    VERSION = sh(
+                        script: "node -p \"require('./package.json').version\"",
+                        returnStdout: true
+                    ).trim()
+                }
+            }
+        }
+
+        stage('Build Angular') {
+            steps {
+                sh '''
+                    npm install
+                    npm run build
+                '''
+            }
+        }
+
+        stage('Build & Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker build -t $DOCKER_USER/soutenance-ui:${VERSION} .
+                        docker push $DOCKER_USER/soutenance-ui:${VERSION}
+                    """
+                }
+            }
+        }
+    }
+}

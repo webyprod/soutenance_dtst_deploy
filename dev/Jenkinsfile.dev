@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk 'jdk17'
+        maven 'maven'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'develop', url: 'https://github.com/webyprod/soutenance_dtst.git'
+            }
+        }
+
+        stage('Compile') {
+            steps {
+                sh 'mvn compile'
+            }
+        }
+
+        stage('Unit tests') {
+            steps {
+                sh 'mvn test'
+            }
+        }
+
+        stage('Sonarqube Scan') {
+            steps {
+                withSonarQubeEnv('sonar') {
+                    script {
+                        def scannerHome = tool 'sonar-scanner'
+                        sh """ ${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=Mission -Dsonar.projectName=Mission -Dsonar.java.binaries=. """
+                    }
+                }
+            }
+        }
+    }
+}

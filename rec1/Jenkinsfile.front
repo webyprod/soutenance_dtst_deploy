@@ -1,0 +1,45 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_REPO = "webyprod"
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'develop', url: 'https://github.com/webyprod/soutenance_dtst_ui.git'
+            }
+        }
+
+        stage('Install') {
+            steps {
+                sh 'npm ci'
+            }
+        }
+
+        stage('Build') {
+            steps {
+                sh 'npm run build --configuration=production'
+            }
+        }
+
+        stage('Dockerize') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh """
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker build -t $DOCKER_USER/soutenance-ui:latest .
+                        docker push $DOCKER_USER/soutenance-ui:latest
+                    """
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            build job: 'REC1 - deploy', wait: false
+        }
+    }
+}

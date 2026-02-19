@@ -1,0 +1,51 @@
+pipeline {
+    agent any
+
+    parameters {
+        string(name: 'BACK_VERSION', description: 'Version backend (ex: 1.1.0)')
+        string(name: 'FRONT_VERSION', description: 'Version frontend (ex: 1.1.0)')
+        choice(name: 'ENV', choices: ['preprod', 'prod'], description: 'Environnement cible')
+    }
+
+    environment {
+        DEPLOY_REPO = "https://github.com/webyprod/soutenance_dtst_deploy.git"
+    }
+
+    stages {
+
+        stage('Checkout deploy repo') {
+            steps {
+                git branch: "${params.ENV}", url: "${DEPLOY_REPO}"
+            }
+        }
+
+        stage('Update backend tag') {
+            steps {
+                sh """
+                    sed -i '/usersBack:/,/tag:/s/tag:.*/tag: "${params.BACK_VERSION}"/' users-chart/values.yaml
+                """
+            }
+        }
+
+        stage('Update frontend tag') {
+            steps {
+                sh """
+                    sed -i '/usersFront:/,/tag:/s/tag:.*/tag: "${params.FRONT_VERSION}"/' users-chart/values.yaml
+                """
+            }
+        }
+
+        stage('Commit & Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_TOKEN')]) {
+                    sh """
+                    git remote set-url origin https://${GIT_USER}:${GIT_TOKEN}@github.com/webyprod/soutenance_dtst_deploy.git
+                    git add .
+                    git commit -m "Promote BACK=${params.BACK_VERSION}, FRONT=${params.FRONT_VERSION} to ${params.ENV}"
+                    git push origin ${params.ENV}
+                    """
+                }
+            }
+        }
+    }
+}

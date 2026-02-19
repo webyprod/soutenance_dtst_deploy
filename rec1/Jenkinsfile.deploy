@@ -1,0 +1,44 @@
+pipeline {
+    agent any
+
+    environment {
+        DEPLOY_REPO = "https://github.com/webyprod/soutenance_dtst_deploy.git"
+        DEPLOY_BRANCH = "recette"
+    }
+
+    stages {
+
+        stage('Checkout deploy repo') {
+            steps {
+                echo "Clonage du repository de déploiement..."
+                git branch: "${DEPLOY_BRANCH}", url: "${DEPLOY_REPO}"
+            }
+        }
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                echo "Déploiement de l’application..."
+                sh 'docker compose down'
+                sh 'docker compose pull'
+                sh 'docker compose up -d'
+            }
+        }
+
+        stage('Check running containers') {
+            steps {
+                echo "Vérification des conteneurs en cours d’exécution..."
+                sh 'docker ps'
+            }
+        }
+    }
+
+    post {
+        failure {
+            echo "Le déploiement a échoué. Affichage des logs..."
+            sh 'docker compose logs --tail=200 || true'
+        }
+        success {
+            echo "Déploiement réussi !"
+        }
+    }
+}
