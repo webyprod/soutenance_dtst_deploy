@@ -1,3 +1,12 @@
+
+# Installe ArgoCD version 7.7.5 dans namespace argocd
+# Utilise configuration depuis fichier argocd-values.yaml
+# Attend maximum 15 minutes que pods soient prêts
+# Si échec, supprime tout (rollback)
+# Installe SEULEMENT APRÈS :
+## Nodes prêts
+## Namespace 'argocd' existe
+## AWS Load Balancer Controller est installe
 resource "helm_release" "argocd" {
   name       = "argocd"
   repository = "https://argoproj.github.io/argo-helm"
